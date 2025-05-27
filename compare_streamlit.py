@@ -77,7 +77,7 @@ def get_vinbudin_price():
                 "500" in volume_cell.text
             ):
                 print("🧪 Matching row found:", name_cell.text, "|", volume_cell.text, "|", price_cell.text)
-                return price_cell.text.strip().replace("kr.", "").replace("kr", "").replace(".", "").strip()
+                return price_cell.text.strip() + " kr"
 
         print("❌ No matching row found for Víking Lite 500ml.")
         return "-"
