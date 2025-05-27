@@ -151,7 +151,6 @@ vinbudin_unit = get_vinbudin_price()
 desma_unit = get_desma_price()
 sante_unit = get_sante_price()
 hagkaup_unit = get_hagkaup_price()
-st.write("🧪 hagkaup_unit =", hagkaup_unit)
 
 # Calculate total (12 cans at unit price)
 try:
