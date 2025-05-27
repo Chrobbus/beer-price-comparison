@@ -90,6 +90,7 @@ smarikid_total, smarikid_unit = get_smarikid_price()
 heimkaup_total, heimkaup_unit = get_heimkaup_price()
 nyjavinbudin_unit = get_nyjavinbudin_price()
 vinbudin_unit = get_vinbudin_price()
+st.write("🧪 vinbudin_unit =", vinbudin_unit)
 
 # Calculate total for Nýja Vínbúðin (12 cans at unit price)
 try:
