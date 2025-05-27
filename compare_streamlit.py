@@ -104,6 +104,7 @@ smarikid_unit_int = to_int(smarikid_unit)
 heimkaup_unit_int = to_int(heimkaup_unit)
 nyjavinbudin_unit_int = to_int(nyjavinbudin_unit)
 vinbudin_unit_int = to_int(vinbudin_unit)
+vinbudin_total_int = vinbudin_unit_int * 12 if vinbudin_unit_int else None
 
 # Build comparison DataFrame
 df = pd.DataFrame({
