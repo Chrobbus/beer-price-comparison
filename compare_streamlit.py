@@ -268,14 +268,15 @@ df = pd.DataFrame({
         costco_unit_int
     ],
     "Link": [
-        https://smarikid.is/product/65577db2c98d14ede00b576d,
-        https://www.veigar.eu/vara/viking-lite-500-ml-12pk-157969,
-        https://nyjavinbudin.is/vara/viking-lite/,
-        https://sante.is/products/viking-lite-50-cl-dos,
-        https://www.heimkaup.is/viking-lite-0-5l-10pk-dos-afhendist-kaldur,
-        https://desma.is/products/viking-lite-500ml-4-4,
-        https://www.costco.is/Alcohol-Click-Collect/Viking-Lite-12-x-500ml/p/453945
+    "https://smarikid.is/product/65577db2c98d14ede00b576d",
+    "https://www.veigar.eu/vara/viking-lite-500-ml-12pk-157969",
+    "https://nyjavinbudin.is/vara/viking-lite/",
+    "https://sante.is/products/viking-lite-50-cl-dos",
+    "https://www.heimkaup.is/viking-lite-0-5l-10pk-dos-afhendist-kaldur",
+    "https://desma.is/products/viking-lite-500ml-4-4",
+    "https://www.costco.is/Alcohol-Click-Collect/Viking-Lite-12-x-500ml/p/453945"
     ]
+
 })
 
 # Remove any rows where Total Price is missing or invalid
