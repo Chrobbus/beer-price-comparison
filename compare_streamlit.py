@@ -325,25 +325,3 @@ st.markdown(html_table, unsafe_allow_html=True)
 
 st.markdown("---")
 st.caption("Made by Daniel using Python & Streamlit 💻")
-
-import os
-from datetime import datetime
-
-# Path to the history file
-history_file = "price_history.csv"
-
-# Add date column
-df_sorted["Date"] = datetime.now().strftime("%Y-%m-%d %H:%M")
-
-# Load existing history or create new
-if os.path.exists(history_file):
-    history_df = pd.read_csv(history_file)
-    updated_df = pd.concat([history_df, df_sorted], ignore_index=True)
-else:
-    updated_df = df_sorted.copy()
-
-# Save to CSV
-updated_df.to_csv(history_file, index=False)
-
-# Optional: Show confirmation
-st.success("✅ Price history updated!")
