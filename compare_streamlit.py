@@ -119,9 +119,11 @@ except:
 
 try:
     desma_numeric = int(desma_unit.replace("kr.", "").replace("kr", "").replace(".", "").strip())
-    desma_total = f"{desma_numeric * 12} kr"
+    desma_total = f"{desma_numeric} kr"
+    desma_unit_calc = f"{round(desma_numeric / 12)} kr"
 except:
     desma_total = "-"
+    desma_unit_calc = "-"
 
 import pandas as pd
 
@@ -143,8 +145,8 @@ heimkaup_unit_int = to_int(heimkaup_unit)
 nyjavinbudin_unit_int = to_int(nyjavinbudin_unit)
 vinbudin_unit_int = to_int(vinbudin_unit)
 vinbudin_total_int = vinbudin_unit_int * 12 if vinbudin_unit_int else None
-desma_unit_int = to_int(desma_unit)
-desma_total_int = desma_unit_int * 12 if desma_unit_int else None
+desma_total_int = to_int(desma_total)
+desma_unit_int = to_int(desma_unit_calc)
 
 # Build comparison DataFrame
 df = pd.DataFrame({
