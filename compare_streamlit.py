@@ -300,22 +300,23 @@ df_sorted = df.sort_values("Total Price").reset_index(drop=True)
 import pandas as pd
 import streamlit as st
 
-# Add the Buy column with clickable markdown links
+# Create HTML links instead of markdown
 df_sorted["Buy"] = df_sorted.apply(
-    lambda row: f'[Buy at {row["Store"]}]({row["Link"]})' if pd.notna(row["Link"]) else "-", axis=1
+    lambda row: f'<a href="{row["Link"]}" target="_blank">Buy</a>' if pd.notna(row["Link"]) else "-",
+    axis=1
 )
 
-# Drop the 'Link' column before styling and displaying
+# Drop raw Link column before display
 df_display = df_sorted.drop(columns=["Link"])
 
-# Display the dataframe with formatting and clickable Buy links
+# Display styled DataFrame with HTML links enabled
 st.markdown("### 📊 Current Prices – Sorted")
 
 st.write(
     df_display.style.format({
         "Total Price": "{:,.0f} kr",
         "Unit Price": "{:,.0f} kr",
-        "Buy": lambda x: x  # Pass-through so markdown renders as clickable links
+        "Buy": lambda x: x
     }).set_properties(subset=["Buy"], **{"text-align": "center"})
      .set_table_styles([{'selector': 'th', 'props': [('text-align', 'center')]}])
      .format({"Buy": lambda x: x}, escape="html")
