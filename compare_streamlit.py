@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 st.set_page_config(page_title="Beer Price Comparison", page_icon="🍺", layout="centered")
 
 st.title("🍺 Víking Lite Price Comparison (500ml cans)")
-st.caption("Real-time comparison from Smárikid, Heimkaup, and Nýja Vínbúðin")
+st.caption("Real-time comparison from Icelandic Online Liquor Stores")
 
 @st.cache_data
 def get_smarikid_price():
