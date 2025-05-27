@@ -129,7 +129,6 @@ nyjavinbudin_unit = get_nyjavinbudin_price()
 vinbudin_unit = get_vinbudin_price()
 desma_unit = get_desma_price()
 sante_unit = get_sante_price()
-st.markdown(f"🧪 sante_unit = `{sante_unit}`")
 
 # Calculate total (12 cans at unit price)
 try:
