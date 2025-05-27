@@ -76,11 +76,14 @@ def get_vinbudin_price():
                 name_cell.text.strip().lower() == "víking lite" and
                 "500" in volume_cell.text
             ):
-                return price_cell.text.strip()
+                print("🧪 Matching row found:", name_cell.text, "|", volume_cell.text, "|", price_cell.text)
+                return price_cell.text.strip().replace("kr.", "").replace("kr", "").replace(".", "").strip()
+
+        # 👇 This is after the for-loop finishes scanning all rows
+        print("❌ No matching row found for Víking Lite 500ml.")
         return "-"
     except Exception as e:
-        print(f"Error fetching Vínbúðin price: {e}")
-        return "-"
+        print(f"Error fetching Vínbú
 
 # Fetch data
 smarikid_total, smarikid_unit = get_smarikid_price()
