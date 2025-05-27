@@ -312,7 +312,7 @@ st.write(
     df_sorted.style.format({
         "Total Price": "{:,.0f} kr",
         "Unit Price": "{:,.0f} kr",
-    }).hide(columns=["Link"])  # hide raw URL column
+    }).drop(columns=["Link"])  # hide raw URL column
     .set_properties(subset=["Buy"], **{"text-align": "center"})
     .set_table_styles([{
         'selector': 'th',
