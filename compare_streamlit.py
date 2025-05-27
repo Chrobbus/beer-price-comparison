@@ -316,7 +316,7 @@ st.write(
         "Unit Price": "{:,.0f} kr"
     }).set_properties(subset=["Buy"], **{"text-align": "center"})
       .set_table_styles([{'selector': 'th', 'props': [('text-align', 'center')]}])
-      .format({"Buy": lambda x: x}, escape="html")  # This renders the HTML links properly
+      .format({"Buy": lambda x: x}, escape="html")  # Render HTML links correctly
 )
 
 st.markdown("---")
