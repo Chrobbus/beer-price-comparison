@@ -55,10 +55,28 @@ def get_nyjavinbudin_price():
     except:
         return "-"
 
+@st.cache_data
+def get_vinbudin_price():
+    try:
+        url = "https://www.vinbudin.is/heim/vorur/stoek-vara.aspx/?productid=07960"
+        headers = {"User-Agent": "Mozilla/5.0"}
+        response = requests.get(url, headers=headers)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        # The price is in a span with id='ctl00_ctl01_Label_ProductPrice'
+        price_tag = soup.find("span", id="ctl00_ctl01_Label_ProductPrice")
+        if price_tag:
+            price = price_tag.text.strip() + " kr"
+            return price
+        return "-"
+    except:
+        return "-"
+
 # Fetch data
 smarikid_total, smarikid_unit = get_smarikid_price()
 heimkaup_total, heimkaup_unit = get_heimkaup_price()
 nyjavinbudin_unit = get_nyjavinbudin_price()
+vinbudin_unit = get_vinbudin_price()
 
 # Calculate total for Nýja Vínbúðin (12 cans at unit price)
 try:
@@ -85,13 +103,31 @@ nyjavinbudin_total_int = to_int(nyjavinbudin_total)
 smarikid_unit_int = to_int(smarikid_unit)
 heimkaup_unit_int = to_int(heimkaup_unit)
 nyjavinbudin_unit_int = to_int(nyjavinbudin_unit)
+vinbudin_unit_int = to_int(vinbudin_unit)
+vinbudin_total_int = vinbudin_unit_int * 12 if vinbudin_unit_int else None
 
 # Build comparison DataFrame
 df = pd.DataFrame({
-    "Store": ["Smárikid (12-pack)", "Heimkaup (12-pack)", "Nýja Vínbúðin (12-pack)"],
-    "Total Price": [smarikid_total_int, heimkaup_total_int, nyjavinbudin_total_int],
-    "Unit Price": [smarikid_unit_int, heimkaup_unit_int, nyjavinbudin_unit_int]
+    "Store": [
+        "Smárikid (12-pack)",
+        "Heimkaup (12-pack)",
+        "Nýja Vínbúðin (12-pack)",
+        "Vínbúðin (12-pack)"
+    ],
+    "Total Price": [
+        smarikid_total_int,
+        heimkaup_total_int,
+        nyjavinbudin_total_int,
+        vinbudin_total_int
+    ],
+    "Unit Price": [
+        smarikid_unit_int,
+        heimkaup_unit_int,
+        nyjavinbudin_unit_int,
+        vinbudin_unit_int
+    ]
 })
+
 
 # Find the lowest price
 min_price = df["Total Price"].min()
