@@ -82,12 +82,33 @@ def get_vinbudin_price():
         print(f"Error fetching Vínbúðin price: {e}")
         return "-"
 
+@st.cache_data
+def get_desma_price():
+    try:
+        url = "https://desma.is/products/viking-lite-500ml-4-4"
+        headers = {"User-Agent": "Mozilla/5.0"}
+        response = requests.get(url, headers=headers, timeout=5)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        # Look for sale price first
+        sale_price = soup.find("span", class_="price-item price-item--sale price-item--last")
+        if sale_price and sale_price.text.strip():
+            price = sale_price.text.strip()
+        else:
+            price = soup.find("span", class_="price-item price-item--regular").text.strip()
+
+        return price
+    except Exception as e:
+        print("⚠️ Desma fetch error:", e)
+        return "-"
+
 
 # Fetch data
 smarikid_total, smarikid_unit = get_smarikid_price()
 heimkaup_total, heimkaup_unit = get_heimkaup_price()
 nyjavinbudin_unit = get_nyjavinbudin_price()
 vinbudin_unit = get_vinbudin_price()
+desma_unit = get_desma_price()
 
 # Calculate total for Nýja Vínbúðin (12 cans at unit price)
 try:
@@ -95,6 +116,12 @@ try:
     nyjavinbudin_total = f"{numeric * 12} kr"
 except:
     nyjavinbudin_total = "-"
+
+try:
+    desma_numeric = int(desma_unit.replace("kr.", "").replace("kr", "").replace(".", "").strip())
+    desma_total = f"{desma_numeric * 12} kr"
+except:
+    desma_total = "-"
 
 import pandas as pd
 
@@ -116,6 +143,8 @@ heimkaup_unit_int = to_int(heimkaup_unit)
 nyjavinbudin_unit_int = to_int(nyjavinbudin_unit)
 vinbudin_unit_int = to_int(vinbudin_unit)
 vinbudin_total_int = vinbudin_unit_int * 12 if vinbudin_unit_int else None
+desma_unit_int = to_int(desma_unit)
+desma_total_int = desma_unit_int * 12 if desma_unit_int else None
 
 # Build comparison DataFrame
 df = pd.DataFrame({
@@ -123,19 +152,22 @@ df = pd.DataFrame({
         "Smárikid (12-pack)",
         "Heimkaup (12-pack)",
         "Nýja Vínbúðin (12-pack)",
-        "Vínbúðin (12-pack)"
+        "Vínbúðin (12-pack)",
+        "Desma Vínbúð (12-pack)"
     ],
     "Total Price": [
         smarikid_total_int,
         heimkaup_total_int,
         nyjavinbudin_total_int,
-        vinbudin_total_int
+        vinbudin_total_int,
+        desma_total_int
     ],
     "Unit Price": [
         smarikid_unit_int,
         heimkaup_unit_int,
         nyjavinbudin_unit_int,
-        vinbudin_unit_int
+        vinbudin_unit_int,
+        desma_unit_int
     ]
 })
 
