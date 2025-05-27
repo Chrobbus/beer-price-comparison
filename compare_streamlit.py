@@ -88,7 +88,7 @@ nyjavinbudin_unit_int = to_int(nyjavinbudin_unit)
 
 # Build comparison DataFrame
 df = pd.DataFrame({
-    "Store": ["Smárikid (12-pack)", "Heimkaup (12-pack)", "Nýja Vínbúðin (12 cans)"],
+    "Store": ["Smárikid (12-pack)", "Heimkaup (12-pack)", "Nýja Vínbúðin (12-pack)"],
     "Total Price": [smarikid_total_int, heimkaup_total_int, nyjavinbudin_total_int],
     "Unit Price": [smarikid_unit_int, heimkaup_unit_int, nyjavinbudin_unit_int]
 })
