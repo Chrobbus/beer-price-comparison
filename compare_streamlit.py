@@ -72,7 +72,9 @@ import pandas as pd
 # Clean numeric values from kr strings
 def to_int(value):
     try:
-        return int(value.replace("kr.", "").replace("kr", "").replace(".", "").strip())
+        # Remove non-digit characters, except space and comma
+        value = value.replace("kr.", "").replace("kr", "").replace(".", "").replace("stk", "").strip()
+        return int("".join(filter(str.isdigit, value)))
     except:
         return None
 
