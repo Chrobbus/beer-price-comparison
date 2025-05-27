@@ -143,6 +143,23 @@ def get_hagkaup_price():
         print("⚠️ Hagkaup (veigar) fetch error:", e)
         return "-"
 
+@st.cache_data
+def get_costco_price():
+    try:
+        url = "https://www.costco.is/Alcohol-Click-Collect/Viking-Lite-12-x-500ml/p/453945"
+        headers = {"User-Agent": "Mozilla/5.0"}
+        response = requests.get(url, headers=headers, timeout=10)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        price_tag = soup.find("span", class_="notranslate ng-star-inserted")
+        if price_tag:
+            return price_tag.text.strip()
+        else:
+            return "-"
+    except Exception as e:
+        print("⚠️ Costco fetch error:", e)
+        return "-"
+
 # Fetch data
 smarikid_total, smarikid_unit = get_smarikid_price()
 heimkaup_total, heimkaup_unit = get_heimkaup_price()
@@ -151,6 +168,7 @@ vinbudin_unit = get_vinbudin_price()
 desma_unit = get_desma_price()
 sante_unit = get_sante_price()
 hagkaup_unit = get_hagkaup_price()
+costco_unit = get_costco_price()
 
 # Calculate total (12 cans at unit price)
 try:
@@ -183,6 +201,14 @@ except:
     hagkaup_total = "-"
     hagkaup_unit_calc = "-"
 
+try:
+    costco_numeric = int(costco_unit.replace("kr.", "").replace("kr", "").replace(".", "").strip())
+    costco_total = f"{costco_numeric} kr"
+    costco_unit_calc = f"{round(costco_numeric / 12)} kr"
+except:
+    costco_total = "-"
+    costco_unit_calc = "-"
+
 import pandas as pd
 
 # Clean numeric values from kr strings
@@ -209,37 +235,40 @@ sante_total_int = to_int(sante_total)
 sante_unit_int = to_int(sante_unit_calc)
 hagkaup_total_int = to_int(hagkaup_total)
 hagkaup_unit_int = to_int(hagkaup_unit_calc)
+costco_total_int = to_int(costco_total)
+costco_unit_int = to_int(costco_unit_calc)  
 
 # Build comparison DataFrame
 df = pd.DataFrame({
     "Store": [
         "Smárikid (12-pack)",
-        "Heimkaup (12-pack)",
+        "Hagkaup (12-pack)",
         "Nýja Vínbúðin (12-pack)",
-        "Vínbúðin (12-pack)",
-        "Desma Vínbúð (12-pack)",
         "Santé (12-pack)",
-        "Hagkaup (12-pack)"
+        "Heimkaup (12-pack)",
+        "Desma Vínbúð (12-pack)",
+        "Costco (12-pack)"
     ],
     "Total Price": [
         smarikid_total_int,
-        heimkaup_total_int,
+        hagkaup_total_int,
         nyjavinbudin_total_int,
-        vinbudin_total_int,
-        desma_total_int,
         sante_total_int,
-        hagkaup_total_int
+        heimkaup_total_int,
+        desma_total_int,
+        costco_total_int
     ],
     "Unit Price": [
         smarikid_unit_int,
-        heimkaup_unit_int,
+        hagkaup_unit_int,
         nyjavinbudin_unit_int,
-        vinbudin_unit_int,
-        desma_unit_int,
         sante_unit_int,
-        hagkaup_unit_int
+        heimkaup_unit_int,
+        desma_unit_int,
+        costco_unit_int
     ]
 })
+
 
 # Remove any rows where Total Price is missing or invalid
 df = df[df["Total Price"].notna()]
