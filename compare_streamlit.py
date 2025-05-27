@@ -312,7 +312,10 @@ st.markdown("---")
 # Show Buy links as clickable buttons below the table
 st.markdown("### 🛒 Buy Links")
 for idx, row in df_sorted.iterrows():
-    st.markdown(f"[Buy at {row['Store']}]({row['Link']})")
+    st.markdown(f'<a href="{row["Link"]}" target="_blank">'
+                f'<button style="padding:6px 12px; margin:4px 8px 8px 0; border-radius:4px; '
+                f'background-color:#ff6b00; color:white; border:none;">Buy at {row["Store"]}</button></a>', 
+                unsafe_allow_html=True)
 
 st.markdown("---")
 st.caption("Made by Daniel using Python & Streamlit 💻")
