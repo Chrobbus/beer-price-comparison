@@ -102,6 +102,25 @@ def get_desma_price():
         print("⚠️ Desma fetch error:", e)
         return "-"
 
+@st.cache_data
+def get_sante_price():
+    try:
+        url = "https://sante.is/products/viking-lite-50-cl-dos"
+        headers = {"User-Agent": "Mozilla/5.0"}
+        response = requests.get(url, headers=headers, timeout=5)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        # Look for sale price first
+        sale_price = soup.find("span", class_="price-item price-item--sale price-item--last")
+        if sale_price and sale_price.text.strip():
+            price = sale_price.text.strip()
+        else:
+            price = soup.find("span", class_="price-item price-item--regular").text.strip()
+
+        return price
+    except Exception as e:
+        print("⚠️ Santé fetch error:", e)
+        return "-"
 
 # Fetch data
 smarikid_total, smarikid_unit = get_smarikid_price()
@@ -109,8 +128,9 @@ heimkaup_total, heimkaup_unit = get_heimkaup_price()
 nyjavinbudin_unit = get_nyjavinbudin_price()
 vinbudin_unit = get_vinbudin_price()
 desma_unit = get_desma_price()
+sante_unit = get_sante_price()
 
-# Calculate total for Nýja Vínbúðin (12 cans at unit price)
+# Calculate total (12 cans at unit price)
 try:
     numeric = int(nyjavinbudin_unit.replace("kr.", "").replace("kr", "").replace(".", "").strip())
     nyjavinbudin_total = f"{numeric * 12} kr"
@@ -124,6 +144,14 @@ try:
 except:
     desma_total = "-"
     desma_unit_calc = "-"
+
+try:
+    sante_numeric = int(sante_unit.replace("kr.", "").replace("ISK", "").replace("kr", "").replace(".", "").strip())
+    sante_total = f"{sante_numeric} kr"
+    sante_unit_calc = f"{round(sante_numeric / 12)} kr"
+except:
+    sante_total = "-"
+    sante_unit_calc = "-"
 
 import pandas as pd
 
@@ -147,6 +175,8 @@ vinbudin_unit_int = to_int(vinbudin_unit)
 vinbudin_total_int = vinbudin_unit_int * 12 if vinbudin_unit_int else None
 desma_total_int = to_int(desma_total)
 desma_unit_int = to_int(desma_unit_calc)
+sante_total_int = to_int(sante_total)
+sante_unit_int = to_int(sante_unit_calc)
 
 # Build comparison DataFrame
 df = pd.DataFrame({
@@ -155,21 +185,24 @@ df = pd.DataFrame({
         "Heimkaup (12-pack)",
         "Nýja Vínbúðin (12-pack)",
         "Vínbúðin (12-pack)",
-        "Desma Vínbúð (12-pack)"
+        "Desma Vínbúð (12-pack)",
+        "Santé (12-pack)"
     ],
     "Total Price": [
         smarikid_total_int,
         heimkaup_total_int,
         nyjavinbudin_total_int,
         vinbudin_total_int,
-        desma_total_int
+        desma_total_int,
+        sante_total_int
     ],
     "Unit Price": [
         smarikid_unit_int,
         heimkaup_unit_int,
         nyjavinbudin_unit_int,
         vinbudin_unit_int,
-        desma_unit_int
+        desma_unit_int,
+        sante_unit_int
     ]
 })
 
