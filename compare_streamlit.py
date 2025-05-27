@@ -139,6 +139,10 @@ df = pd.DataFrame({
     ]
 })
 
+# Remove any rows where Total Price is missing or invalid
+df = df[df["Total Price"].notna()]
+df = df[df["Total Price"] != "-"]
+
 # Find the lowest price
 min_price = df["Total Price"].min()
 
