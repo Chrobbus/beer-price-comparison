@@ -55,6 +55,23 @@ def get_nyjavinbudin_price():
     except:
         return "-"
 
+@st.cache_data
+def get_vinbudin_price():
+    try:
+        url = "https://www.vinbudin.is/heim/vorur/stoek-vara.aspx/?productid=07960"
+        headers = {"User-Agent": "Mozilla/5.0"}
+        response = requests.get(url, headers=headers, timeout=5)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        price_tag = soup.find("span", id="ctl00_ctl01_Label_ProductPrice", class_="money")
+        if price_tag:
+            price = price_tag.text.strip() + " kr"
+            return price
+        return "-"
+    except Exception as e:
+        print(f"Error fetching Vínbúðin price: {e}")
+        return "-"
+
 # Fetch data
 smarikid_total, smarikid_unit = get_smarikid_price()
 heimkaup_total, heimkaup_unit = get_heimkaup_price()
@@ -86,6 +103,7 @@ nyjavinbudin_total_int = to_int(nyjavinbudin_total)
 smarikid_unit_int = to_int(smarikid_unit)
 heimkaup_unit_int = to_int(heimkaup_unit)
 nyjavinbudin_unit_int = to_int(nyjavinbudin_unit)
+vinbudin_unit_int = to_int(vinbudin_unit)
 
 # Build comparison DataFrame
 df = pd.DataFrame({
