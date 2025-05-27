@@ -67,13 +67,46 @@ try:
 except:
     nyjavinbudin_total = "-"
 
-# Display updated results
-st.markdown("### 📊 Current Prices")
-st.table({
+import pandas as pd
+
+# Clean numeric values from kr strings
+def to_int(value):
+    try:
+        return int(value.replace("kr.", "").replace("kr", "").replace(".", "").strip())
+    except:
+        return None
+
+# Convert prices to integers
+smarikid_total_int = to_int(smarikid_total)
+heimkaup_total_int = to_int(heimkaup_total)
+nyjavinbudin_total_int = to_int(nyjavinbudin_total)
+smarikid_unit_int = to_int(smarikid_unit)
+heimkaup_unit_int = to_int(heimkaup_unit)
+nyjavinbudin_unit_int = to_int(nyjavinbudin_unit)
+
+# Build comparison DataFrame
+df = pd.DataFrame({
     "Store": ["Smárikid (12-pack)", "Heimkaup (12-pack)", "Nýja Vínbúðin (12 cans)"],
-    "Total Price": [smarikid_total, heimkaup_total, nyjavinbudin_total],
-    "Unit Price": [smarikid_unit, heimkaup_unit, nyjavinbudin_unit]
+    "Total Price": [smarikid_total_int, heimkaup_total_int, nyjavinbudin_total_int],
+    "Unit Price": [smarikid_unit_int, heimkaup_unit_int, nyjavinbudin_unit_int]
 })
+
+# Find the lowest price
+min_price = df["Total Price"].min()
+
+# Add comparison column
+df["Compared to Cheapest"] = df["Total Price"].apply(
+    lambda x: "Cheapest 🥇" if x == min_price else f"+{round(((x - min_price) / min_price) * 100)}%")
+
+# Sort by Total Price ascending
+df_sorted = df.sort_values("Total Price").reset_index(drop=True)
+
+# Display
+st.markdown("### 📊 Current Prices – Sorted")
+st.dataframe(df_sorted.style.format({
+    "Total Price": "{:,.0f} kr",
+    "Unit Price": "{:,.0f} kr"
+}))
 
 st.markdown("---")
 st.caption("Made by Daniel using Python & Streamlit 💻")
