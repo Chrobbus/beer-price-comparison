@@ -71,19 +71,15 @@ def get_vinbudin_price():
             price_cell = row.find("td", class_="price")
             volume_cell = row.find("td", class_="volume")
 
-            if (
-                name_cell and price_cell and volume_cell and
-                name_cell.text.strip().lower() == "víking lite" and
-                "500" in volume_cell.text
-            ):
-                print("🧪 Matching row found:", name_cell.text, "|", volume_cell.text, "|", price_cell.text)
+            name = name_cell.text.strip().lower() if name_cell else ""
+            volume = volume_cell.text.strip() if volume_cell else ""
+
+            if name == "víking lite" and "500" in volume:
                 return price_cell.text.strip() + " kr"
 
-        print("❌ No matching row found for Víking Lite 500ml.")
         return "-"
     except Exception as e:
-        print(f"Error fetching Vínbúðin price: {e}")
-        return "-"
+        return f"Error: {e}"
 
 # Fetch data
 smarikid_total, smarikid_unit = get_smarikid_price()
