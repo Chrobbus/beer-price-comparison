@@ -266,9 +266,17 @@ df = pd.DataFrame({
         heimkaup_unit_int,
         desma_unit_int,
         costco_unit_int
+    ],
+    "Link": [
+        "https://smarikid.is/product/65577db2c98d14ede00b576d",
+        "https://www.veigar.eu/vara/viking-lite-500-ml-12pk-157969",
+        "https://nyjavinbudin.is/vara/viking-lite/",
+        "https://sante.is/products/viking-lite-50-cl-dos",
+        "https://www.heimkaup.is/viking-lite-0-5l-10pk-dos-afhendist-kaldur",
+        "https://desma.is/products/viking-lite-500ml-4-4",
+        "https://www.costco.is/Alcohol-Click-Collect/Viking-Lite-12-x-500ml/p/453945"
     ]
 })
-
 
 # Remove any rows where Total Price is missing or invalid
 df = df[df["Total Price"].notna()]
@@ -289,12 +297,22 @@ df["Compared to Cheapest"] = df["Total Price"].apply(
 # Sort by Total Price ascending
 df_sorted = df.sort_values("Total Price").reset_index(drop=True)
 
-# Display
+import pandas as pd
+import streamlit as st
+
+# Display the sorted table (without links first)
 st.markdown("### 📊 Current Prices – Sorted")
 st.dataframe(df_sorted.style.format({
     "Total Price": "{:,.0f} kr",
     "Unit Price": "{:,.0f} kr"
 }))
+
+st.markdown("---")
+
+# Show Buy links as clickable buttons below the table
+st.markdown("### 🛒 Buy Links")
+for idx, row in df_sorted.iterrows():
+    st.markdown(f"[Buy at {row['Store']}]({row['Link']})")
 
 st.markdown("---")
 st.caption("Made by Daniel using Python & Streamlit 💻")
