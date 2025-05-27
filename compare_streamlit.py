@@ -313,13 +313,12 @@ df_display = df_sorted.drop(columns=["Link"])
 st.markdown("### 📊 Current Prices – Sorted")
 
 st.write(
-    df_display.style.format({
+    df_sorted.drop(columns=["Link"]).style.format({
         "Total Price": "{:,.0f} kr",
-        "Unit Price": "{:,.0f} kr",
-        "Buy": lambda x: x
+        "Unit Price": "{:,.0f} kr"
     }).set_properties(subset=["Buy"], **{"text-align": "center"})
-     .set_table_styles([{'selector': 'th', 'props': [('text-align', 'center')]}])
-     .format({"Buy": lambda x: x}, escape="html")
+      .set_table_styles([{'selector': 'th', 'props': [('text-align', 'center')]}])
+      .format({"Buy": lambda x: x}, escape="html")
 )
 
 st.markdown("---")
