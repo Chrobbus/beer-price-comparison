@@ -298,9 +298,6 @@ df["Compared to Cheapest"] = df["Total Price"].apply(
 # Sort by Total Price ascending
 df_sorted = df.sort_values("Total Price").reset_index(drop=True)
 
-import pandas as pd
-import streamlit as st
-
 # Add Buy column with clickable HTML links
 df_sorted["Buy"] = df_sorted.apply(
     lambda row: f'<a href="{row["Link"]}" target="_blank" rel="noopener noreferrer">Buy</a>'
@@ -309,13 +306,21 @@ df_sorted["Buy"] = df_sorted.apply(
     axis=1,
 )
 
+# ✅ Add "kr" formatting back to price columns
+df_sorted["Total Price"] = df_sorted["Total Price"].apply(
+    lambda x: f"{x:,} kr" if pd.notna(x) and isinstance(x, (int, float)) else x
+)
+df_sorted["Unit Price"] = df_sorted["Unit Price"].apply(
+    lambda x: f"{x:,} kr" if pd.notna(x) and isinstance(x, (int, float)) else x
+)
+
 # Display using st.markdown to allow raw HTML rendering
 st.markdown("### 📊 Current Prices – Sorted (Click to Buy)")
 
-# Convert DataFrame to HTML with 'escape=False' to allow HTML links
+# Convert DataFrame to HTML with HTML links visible
 html_table = df_sorted.drop(columns=["Link"]).to_html(escape=False, index=False, justify="center")
 
-# Show the table with HTML styling
+# Show the table
 st.markdown(html_table, unsafe_allow_html=True)
 
 st.markdown("---")
