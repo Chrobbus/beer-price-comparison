@@ -63,8 +63,8 @@ def get_vinbudin_price():
         response = requests.get(url, headers=headers)
         soup = BeautifulSoup(response.text, "html.parser")
 
-        # The price is in a span with id='ctl00_ctl01_Label_ProductPrice'
-        price_tag = soup.find("span", id="ctl00_ctl01_Label_ProductPrice")
+        # Find span with ID and class (to be more reliable)
+        price_tag = soup.find("span", id="ctl00_ctl01_Label_ProductPrice", class_="money")
         if price_tag:
             price = price_tag.text.strip() + " kr"
             return price
