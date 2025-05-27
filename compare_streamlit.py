@@ -122,6 +122,27 @@ def get_sante_price():
         print("⚠️ Santé fetch error:", e)
         return "-"
 
+@st.cache_data
+def get_hagkaup_price():
+    try:
+        url = "https://www.veigar.eu/vara/viking-lite-500-ml-12pk-157969"
+        headers = {"User-Agent": "Mozilla/5.0"}
+        response = requests.get(url, headers=headers, timeout=5)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        # Find all <p> tags and look for one that starts with "Verð:"
+        price_paragraphs = soup.find_all("p")
+        for p in price_paragraphs:
+            if p.text.strip().startswith("Verð:"):
+                price_span = p.find("span")
+                if price_span:
+                    return price_span.text.strip()
+
+        return "-"
+    except Exception as e:
+        print("⚠️ Hagkaup (veigar) fetch error:", e)
+        return "-"
+
 # Fetch data
 smarikid_total, smarikid_unit = get_smarikid_price()
 heimkaup_total, heimkaup_unit = get_heimkaup_price()
@@ -129,6 +150,8 @@ nyjavinbudin_unit = get_nyjavinbudin_price()
 vinbudin_unit = get_vinbudin_price()
 desma_unit = get_desma_price()
 sante_unit = get_sante_price()
+hagkaup_unit = get_hagkaup_price()
+st.write("🧪 hagkaup_unit =", hagkaup_unit)
 
 # Calculate total (12 cans at unit price)
 try:
@@ -152,6 +175,14 @@ try:
 except:
     sante_total = "-"
     sante_unit_calc = "-"
+
+try:
+    hagkaup_numeric = int(hagkaup_unit.replace("kr.", "").replace("kr", "").replace(".", "").strip())
+    hagkaup_total = f"{hagkaup_numeric} kr"
+    hagkaup_unit_calc = f"{round(hagkaup_numeric / 12)} kr"
+except:
+    hagkaup_total = "-"
+    hagkaup_unit_calc = "-"
 
 import pandas as pd
 
@@ -177,6 +208,8 @@ desma_total_int = to_int(desma_total)
 desma_unit_int = to_int(desma_unit_calc)
 sante_total_int = to_int(sante_total)
 sante_unit_int = to_int(sante_unit_calc)
+hagkaup_total_int = to_int(hagkaup_total)
+hagkaup_unit_int = to_int(hagkaup_unit_calc)
 
 # Build comparison DataFrame
 df = pd.DataFrame({
@@ -186,7 +219,8 @@ df = pd.DataFrame({
         "Nýja Vínbúðin (12-pack)",
         "Vínbúðin (12-pack)",
         "Desma Vínbúð (12-pack)",
-        "Santé (12-pack)"
+        "Santé (12-pack)",
+        "Hagkaup (12-pack)"
     ],
     "Total Price": [
         smarikid_total_int,
@@ -194,7 +228,8 @@ df = pd.DataFrame({
         nyjavinbudin_total_int,
         vinbudin_total_int,
         desma_total_int,
-        sante_total_int
+        sante_total_int,
+        hagkaup_total_int
     ],
     "Unit Price": [
         smarikid_unit_int,
@@ -202,7 +237,8 @@ df = pd.DataFrame({
         nyjavinbudin_unit_int,
         vinbudin_unit_int,
         desma_unit_int,
-        sante_unit_int
+        sante_unit_int,
+        hagkaup_unit_int
     ]
 })
 
