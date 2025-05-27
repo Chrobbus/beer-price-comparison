@@ -134,7 +134,8 @@ min_price = df["Total Price"].min()
 
 # Add comparison column
 df["Compared to Cheapest"] = df["Total Price"].apply(
-    lambda x: "Cheapest 🥇" if x == min_price else f"+{round(((x - min_price) / min_price) * 100)}%")
+    lambda x: "Cheapest 🥇" if x == min_price else (f"+{round(((x - min_price) / min_price) * 100)}%" if x is not None else "-")
+)
 
 # Sort by Total Price ascending
 df_sorted = df.sort_values("Total Price").reset_index(drop=True)
