@@ -309,15 +309,14 @@ df_sorted["Buy"] = df_sorted.apply(
     axis=1,
 )
 
-# Drop raw Link column, display styled dataframe with HTML rendered
-st.write(
-    df_sorted.drop(columns=["Link"]).style.format({
-        "Total Price": "{:,.0f} kr",
-        "Unit Price": "{:,.0f} kr"
-    }).set_properties(subset=["Buy"], **{"text-align": "center"})
-      .set_table_styles([{'selector': 'th', 'props': [('text-align', 'center')]}])
-      .format({"Buy": lambda x: x}, escape="html")  # Render HTML links correctly
-)
+# Display using st.markdown to allow raw HTML rendering
+st.markdown("### 📊 Current Prices – Sorted (Click to Buy)")
+
+# Convert DataFrame to HTML with 'escape=False' to allow HTML links
+html_table = df_sorted.drop(columns=["Link"]).to_html(escape=False, index=False, justify="center")
+
+# Show the table with HTML styling
+st.markdown(html_table, unsafe_allow_html=True)
 
 st.markdown("---")
 st.caption("Made by Daniel using Python & Streamlit 💻")
