@@ -60,11 +60,18 @@ smarikid_total, smarikid_unit = get_smarikid_price()
 heimkaup_total, heimkaup_unit = get_heimkaup_price()
 nyjavinbudin_unit = get_nyjavinbudin_price()
 
-# Display results
+# Calculate total for Nýja Vínbúðin (12 cans at unit price)
+try:
+    numeric = int(nyjavinbudin_unit.replace("kr.", "").replace("kr", "").replace(".", "").strip())
+    nyjavinbudin_total = f"{numeric * 12} kr"
+except:
+    nyjavinbudin_total = "-"
+
+# Display updated results
 st.markdown("### 📊 Current Prices")
 st.table({
-    "Store": ["Smárikid (12-pack)", "Heimkaup (12-pack)", "Nýja Vínbúðin (1pc)"],
-    "Total Price": [smarikid_total, heimkaup_total, "-"],
+    "Store": ["Smárikid (12-pack)", "Heimkaup (12-pack)", "Nýja Vínbúðin (12 cans)"],
+    "Total Price": [smarikid_total, heimkaup_total, nyjavinbudin_total],
     "Unit Price": [smarikid_unit, heimkaup_unit, nyjavinbudin_unit]
 })
 
